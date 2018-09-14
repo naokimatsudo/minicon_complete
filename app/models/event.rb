@@ -1,6 +1,23 @@
 class Event < ApplicationRecord
   belongs_to :event_category
+  has_many :clips
+  has_many :users, through: :clips
   has_many :purchases
+  
+  def self.search(search)
+    if search
+      Event.where(['location LIKE ?', "%#{search}%"])
+    else
+      Event.all
+    end
+  end
+  def self.search_name(search)
+    if search
+      Event.where(['title LIKE ?', "%#{search}%"])
+    else
+      Event.all
+    end
+  end
   
   validates :event_category, :title, :location, :start_at, :ticket_price, :ticket_quantity, presence: true
   validates :title, length: { maximum: 80 }, uniqueness: true
